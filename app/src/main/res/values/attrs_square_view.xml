@@ -1,8 +1,14 @@
 <resources>
     <declare-styleable name="Square">
-        <attr name="exampleString" format="string" />
-        <attr name="exampleDimension" format="dimension" />
-        <attr name="exampleColor" format="color" />
-        <attr name="exampleDrawable" format="color|reference" />
+        <attr name="mainNumberColor" format="color" />
+        <attr name="mainNumberErrorColor" format="color" />
+        <attr name="editNumberColor" format="color" />
+        <attr name="squareBackgroundColor" format="color" />
+        <attr name="squareBorderColor" format="color" />
+        <attr name="selectedSquareBorderColor" format="color" />
+        <attr name="mainTextDimension" format="dimension" />
+        <attr name="editTextDimension" format="dimension" />
+        <attr name="borderWidth" format="dimension" />
+        <attr name="squareSize" format="dimension" />
     </declare-styleable>
 </resources>

@@ -5,44 +5,52 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.killersudoku.R;
 
+import java.util.Locale;
+
 /**
  * TODO: document your custom view class.
  */
 public class Square extends View {
-    private Integer mainNumber = 5; //TODO remove default
-    private boolean show1 = true;
-    private boolean show2 = true;
-    private boolean show3 = true;
-    private boolean show4 = true;
-    private boolean show5 = true;
-    private boolean show6 = true;
-    private boolean show7 = true;
-    private boolean show8 = true;
-    private boolean show9 = true;
+    private Integer mainNumber; //TODO remove default
+    private Integer answer = 7; //TODO remove default
+    private boolean selected = false;
+    private boolean show1 = false;
+    private boolean show2 = false;
+    private boolean show3 = false;
+    private boolean show4 = false;
+    private boolean show5 = false;
+    private boolean show6 = false;
+    private boolean show7 = false;
+    private boolean show8 = false;
+    private boolean show9 = false;
 
-    private int mainNumberColor = Color.RED; // TODO: use theme
+    private int mainNumberErrorColor = Color.RED; //TODO: use theme
+    private int mainNumberColor = Color.BLUE; // TODO: use theme
     private int editNumberColor = Color.WHITE; //TODO: use theme
     private int squareBackgroundColor = Color.BLACK; //TODO use theme
     private int squareBorderColor = Color.BLUE;// TODO use theme
+    private int selectedSquareBorderColor = Color.RED;//TODO use theme
 
-    private float mainTextDimension = 100; // TODO: use a default from R.dimen...
-    private float editTextDimension = 30; //TODO use a default from R.dimen...
-    private float borderWidth = 12;
+    private float mainTextDimension = 150; //Minimum 100 Up at square size 200 to 150
+    private float editTextDimension = 50; //Minimum 30 Up at square size 200 to 50
+    private float borderWidth = 6;//Maximum 12
+    private float squareSize = 200;//Minimum 120 Max 250
 
     private TextPaint mTextPaint;
     private TextPaint editTextPaint;
     private Paint squarePaint;
     private Paint squareBorderPaint;
-    private float editTextWidth;
+    RectF square;
     private float editTextHeight;
+    private float mainNumberTextHeight;
 
     public Square(Context context) {
         super(context);
@@ -65,13 +73,37 @@ public class Square extends View {
                 attrs, R.styleable.Square, defStyle, 0);
 
         mainNumberColor = a.getColor(
-                R.styleable.Square_exampleColor,
+                R.styleable.Square_mainNumberColor,
                 mainNumberColor);
+        mainNumberErrorColor = a.getColor(
+                R.styleable.Square_mainNumberErrorColor,
+                mainNumberErrorColor);
+        editNumberColor = a.getColor(
+                R.styleable.Square_editNumberColor,
+                editNumberColor);
+        squareBackgroundColor = a.getColor(
+                R.styleable.Square_squareBackgroundColor,
+                squareBackgroundColor);
+        squareBorderColor = a.getColor(
+                R.styleable.Square_squareBorderColor,
+                squareBorderColor);
+        selectedSquareBorderColor = a.getColor(
+                R.styleable.Square_selectedSquareBorderColor,
+                selectedSquareBorderColor);
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
         mainTextDimension = a.getDimension(
-                R.styleable.Square_exampleDimension,
+                R.styleable.Square_mainTextDimension,
                 mainTextDimension);
+        editTextDimension = a.getDimension(
+                R.styleable.Square_editTextDimension,
+                editTextDimension);
+        borderWidth = a.getDimension(
+                R.styleable.Square_borderWidth,
+                borderWidth);
+        squareSize = a.getDimension(
+                R.styleable.Square_squareSize,
+                squareSize);
 
         a.recycle();
 
@@ -89,7 +121,6 @@ public class Square extends View {
         squarePaint.setStyle(Paint.Style.FILL);
 
         squareBorderPaint = new Paint();
-        squareBorderPaint.setColor(squareBorderColor);
         squareBorderPaint.setStyle(Paint.Style.STROKE);
         squareBorderPaint.setStrokeWidth(borderWidth);
 
@@ -101,20 +132,70 @@ public class Square extends View {
         if(mainNumber == null){
             return "";
         }else{
-            return String.format("%d", mainNumber);
+            show1 = false;
+            show2 = false;
+            show3 = false;
+            show4 = false;
+            show5 = false;
+            show6 = false;
+            show7 = false;
+            show8 = false;
+            show9 = false;
+            return String.format(Locale.ENGLISH, "%d", mainNumber);
         }
     }
 
     private void invalidateTextPaintAndMeasurements() {
+        square = new RectF(0,0,squareSize,squareSize);
+
         mTextPaint.setTextSize(mainTextDimension);
-        mTextPaint.setColor(mainNumberColor);
+        if(mainNumber==answer){
+            mTextPaint.setColor(mainNumberColor);
+        }else{
+            mTextPaint.setColor(mainNumberErrorColor);
+        }
 
-        editTextPaint.setTextSize((editTextDimension));
+
+        editTextPaint.setTextSize(editTextDimension);
         editTextPaint.setColor(editNumberColor);
-        editTextWidth = editTextPaint.measureText("9");
 
-        Paint.FontMetrics fontMetrics = editTextPaint.getFontMetrics();
-        editTextHeight = fontMetrics.bottom;
+        squareBorderPaint.setColor(selected?selectedSquareBorderColor:squareBorderColor);
+
+        Rect bounds = new Rect();
+        editTextPaint.getTextBounds("8", 0, "8".length(), bounds);
+        editTextHeight = bounds.height();
+
+        Rect bounds2 = new Rect();
+        mTextPaint.getTextBounds(getMainNumberText(), 0, getMainNumberText().length(), bounds2);
+        mainNumberTextHeight = bounds2.height();
+    }
+
+    @Override
+    protected void onMeasure (int widthMeasureSpec,
+                              int heightMeasureSpec){
+        setMeasuredDimension(Math.max(widthMeasureSpec, 100), Math.max(widthMeasureSpec, 100));
+    }
+
+    @Override
+    protected void onSizeChanged (int w,
+                                  int h,
+                                  int oldw,
+                                  int oldh){
+        //Min square is 120, jump 200. Difference 80
+        //Main number min 100 up to 150. Difference 50
+        //Edit number min 30 up to 50. Difference 20
+        //Don't go smaller than square size 100
+        squareSize = Math.max(w, 100);
+        int amountGreaterThanMin = (int)squareSize - 100;//e.g. 10
+        mainTextDimension = (float)((amountGreaterThanMin/80) * 50) + 100;//e.g. 103.8
+        if(mainTextDimension<100){
+            mainTextDimension = 100;//Minimum 100
+        }
+        editTextDimension = (float)((amountGreaterThanMin/80) * 20) + 30;//31.5
+        if(editTextDimension<30){
+            editTextDimension = 30;//Minimum 30
+        }
+        invalidateTextPaintAndMeasurements();
     }
 
     @Override
@@ -125,105 +206,93 @@ public class Square extends View {
         // allocations per draw cycle.
         int paddingLeft = getPaddingLeft();// These methods are from the parent View class
         int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
 
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
-
-
-        //Draw the background
-        RectF square = new RectF(0,0,150,150);
         //Fill
-        canvas.drawRoundRect(square, (float) 0.5, (float) 0.5, squarePaint);
+        canvas.drawRoundRect(square, (float) paddingLeft, (float) paddingTop, squarePaint);
         //Border
-        canvas.drawRoundRect(square, (float) 0.5, (float) 0.5, squareBorderPaint);
+        canvas.drawRoundRect(square, (float) paddingLeft, (float) paddingTop, squareBorderPaint);
 
         // Draw the text.
+        float halfSquare = (squareSize)/2;
+        float quarterSquare = (squareSize/4);
+        float threeQuarterSquare = (squareSize * 3/4);
         canvas.drawText(getMainNumberText(),
-                75,
-                116,
+                halfSquare,//Position of center of number?!
+                halfSquare + (mainNumberTextHeight/2),//Position of bottom of number
                 mTextPaint);
 
         //Draw the edit numbers
         if(show1){
             canvas.drawText(
                     "1",
-                    32,//strokeWidth 12 + 20 space
-                    43,//strokeWidth 12 + 31 = not sure what 31 is Size of text?
+                    quarterSquare,
+                    quarterSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show2){
             canvas.drawText(
                     "2",
-                    70,
-                    43,
+                    halfSquare,
+                    quarterSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show3){
             canvas.drawText(
                     "3",
-                    108,
-                    43,
+                    threeQuarterSquare,
+                    quarterSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show4){
             canvas.drawText(
                     "4",
-                    32,
-                    86,
+                    quarterSquare,
+                    halfSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show5){
             canvas.drawText(
                     "5",
-                    70,
-                    86,
+                    halfSquare,
+                    halfSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show6){
             canvas.drawText(
                     "6",
-                    108,
-                    86,
+                    threeQuarterSquare,
+                    halfSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show7){
             canvas.drawText(
                     "7",
-                    32,
-                    129,
+                    quarterSquare,
+                    threeQuarterSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show8){
             canvas.drawText(
                     "8",
-                    70,
-                    129,
+                    halfSquare,
+                    threeQuarterSquare + (editTextHeight),
                     editTextPaint);
         }
 
         if(show9){
             canvas.drawText(
                     "9",
-                    108,
-                    129,
+                    threeQuarterSquare,
+                    threeQuarterSquare + (editTextHeight),
                     editTextPaint);
         }
-
-//        // Draw the example drawable on top of the text.
-//        if (mExampleDrawable != null) {
-//            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-//                    paddingLeft + contentWidth, paddingTop + contentHeight);
-//            mExampleDrawable.draw(canvas);
-//        }
     }
 
     /**
@@ -288,7 +357,51 @@ public class Square extends View {
         invalidateTextPaintAndMeasurements();
     }
 
+    /**
+     * Set the correct answer for this square
+     * @param newAnswer
+     */
+    public void setAnswer(int newAnswer) {
+        answer = newAnswer;
+        invalidateTextPaintAndMeasurements();
+    }
+
+    /**
+     * Toggle the selected state of the square
+     */
+    @Override
+    protected void onFocusChanged (boolean gainFocus,
+                                   int direction,
+                                   Rect previouslyFocusedRect){
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        if(gainFocus){
+            selected = !selected;
+            invalidateTextPaintAndMeasurements();
+        }
+    }
+
     public void setEditNumber(int editNumber) {
-        switch(editNumber)
+        if(mainNumber!=null){
+            return;
+        }
+        switch(editNumber){
+            case 1: show1 = !show1;
+                return;
+            case 2: show2 = !show2;
+                return;
+            case 3: show3 = !show3;
+                return;
+            case 4: show4 = !show4;
+                return;
+            case 5: show5 = !show5;
+                return;
+            case 6: show6 = !show6;
+                return;
+            case 7: show7 = !show7;
+                return;
+            case 8: show8 = !show8;
+                return;
+            case 9: show9 = !show9;
+        }
     }
 }
