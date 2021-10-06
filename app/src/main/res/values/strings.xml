@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">KillerSudoku</string>
+    <string name="page_title">Ultra Sudoku</string>
+    <string name="app_name">Ultra Sudoku</string>
 </resources>

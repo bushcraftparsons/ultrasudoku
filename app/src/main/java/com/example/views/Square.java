@@ -1,4 +1,4 @@
-package com.example.sudokusquare.view;
+package com.example.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.example.killersudoku.R;
@@ -32,12 +33,12 @@ public class Square extends View {
     private boolean show8 = false;
     private boolean show9 = false;
 
-    private int mainNumberErrorColor = Color.RED; //TODO: use theme
-    private int mainNumberColor = Color.BLUE; // TODO: use theme
-    private int editNumberColor = Color.WHITE; //TODO: use theme
-    private int squareBackgroundColor = Color.BLACK; //TODO use theme
-    private int squareBorderColor = Color.BLUE;// TODO use theme
-    private int selectedSquareBorderColor = Color.RED;//TODO use theme
+    private int mainNumberErrorColor;
+    private int mainNumberColor;
+    private int editNumberColor;
+    private int squareBackgroundColor;
+    private int squareBorderColor;
+    private int selectedSquareBorderColor;
 
     private float mainTextDimension = 150; //Minimum 100 Up at square size 200 to 150
     private float editTextDimension = 50; //Minimum 30 Up at square size 200 to 50
@@ -54,16 +55,19 @@ public class Square extends View {
 
     public Square(Context context) {
         super(context);
+        setClickable(true);
         init(null, 0);
     }
 
     public Square(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setClickable(true);
         init(attrs, 0);
     }
 
     public Square(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        setClickable(true);
         init(attrs, defStyle);
     }
 
@@ -217,7 +221,7 @@ public class Square extends View {
         float quarterSquare = (squareSize/4);
         float threeQuarterSquare = (squareSize * 3/4);
         canvas.drawText(getMainNumberText(),
-                halfSquare,//Position of center of number?!
+                halfSquare,//Position of center of number, because it's centred text
                 halfSquare + (mainNumberTextHeight/2),//Position of bottom of number
                 mTextPaint);
 
@@ -310,12 +314,32 @@ public class Square extends View {
      * @param newMainNumber The main number attribute value to use.
      */
     public void setMainNumber(int newMainNumber) {
-        if(mainNumber == newMainNumber){
+        if(mainNumber != null && mainNumber == newMainNumber){
             mainNumber = null;
         }else{
             mainNumber = newMainNumber;
         }
         invalidateTextPaintAndMeasurements();
+        invalidate ();
+    }
+
+    public void toggleSelected(){
+        if(selected){
+            selected = false;
+        }else{
+            selected = true;
+        }
+        invalidateTextPaintAndMeasurements();
+        invalidate();
+    }
+
+    public void unselect(){
+        if(selected){
+            selected = false;
+            invalidateTextPaintAndMeasurements();
+            invalidate();
+        }
+
     }
 
     /**
@@ -364,20 +388,6 @@ public class Square extends View {
     public void setAnswer(int newAnswer) {
         answer = newAnswer;
         invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Toggle the selected state of the square
-     */
-    @Override
-    protected void onFocusChanged (boolean gainFocus,
-                                   int direction,
-                                   Rect previouslyFocusedRect){
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-        if(gainFocus){
-            selected = !selected;
-            invalidateTextPaintAndMeasurements();
-        }
     }
 
     public void setEditNumber(int editNumber) {

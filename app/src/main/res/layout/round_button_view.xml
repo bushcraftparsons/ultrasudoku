@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
-    <com.example.views.Square
-        style="@style/Widget.Theme.KillerSudoku.SquareView"/>
+    <com.example.views.RoundButtonView
+        style="@style/Widget.Theme.KillerSudoku.RoundButtonView"/>
 
 </FrameLayout>

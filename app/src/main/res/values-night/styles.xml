@@ -1,5 +1,37 @@
 <resources>
 
+    <style name="Widget.Theme.KillerSudoku.SquareView" parent="">
+        <item name="squareBackgroundColor">@color/black</item>
+        <item name="android:background">?background</item>
+        <item name="mainNumberColor">?colorPrimary</item>
+        <item name="mainNumberErrorColor">?colorError</item>
+        <item name="editNumberColor">?colorOnBackground</item>
+        <item name="squareBorderColor">?colorSecondaryVariant</item>
+        <item name="selectedSquareBorderColor">?colorSecondary</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+    </style>
+
+    <style name="Widget.Theme.KillerSudoku.IconButtonView" parent="">
+        <item name="android:background">@color/gray_600</item>
+    </style>
+
+    <style name="Widget.Theme.KillerSudoku.RoundButtonView" parent="">
+        <item name="android:background">?background</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="buttonColor">?colorPrimary</item>
+        <item name="buttonText">""</item>
+        <item name="buttonRadius">30dp</item>
+        <item name="textColor">?colorOnPrimary</item>
+    </style>
+
     <style name="Widget.Theme.KillerSudoku.MyView" parent="">
         <item name="android:background">@color/gray_600</item>
     </style>
