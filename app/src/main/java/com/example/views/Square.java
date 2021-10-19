@@ -12,17 +12,42 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.example.killersudoku.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.example.killersudoku.Box;
+import com.example.killersudoku.Col;
+import com.example.killersudoku.R;
+import com.example.killersudoku.Row;
+import com.example.killersudoku.Utils;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * TODO: document your custom view class.
  */
-public class Square extends View {
-    private Integer mainNumber; //TODO remove default
-    private Integer answer = 7; //TODO remove default
+public class Square extends View implements Comparable<Square> {
+    /**
+     * User added main number
+     */
+    private Integer mainNumber;
+    /**
+     * Actual answer for the square
+     */
+    private Integer answer = null;
+    /**
+     * Square is selected
+     */
     private boolean selected = false;
+
     private boolean show1 = false;
     private boolean show2 = false;
     private boolean show3 = false;
@@ -52,6 +77,21 @@ public class Square extends View {
     RectF square;
     private float editTextHeight;
     private float mainNumberTextHeight;
+
+    private Box box;
+    private Row row;
+    private Col col;
+    /**Index of the square**/
+    private int squareIndex;
+    /**rowIndex matches the number of squares in the col, it's the index of the row (0 at the top)**/
+    private int rowIndex;
+    /**colIndex matches the number of squares in the row, it's the index of the column (0 at the left)**/
+    private int colIndex;
+    /**Index of the square within its box**/
+    private int boxIndex;
+    private Box[] boxes;
+    private Row[] rows;
+    private Col[] cols;
 
     public Square(Context context) {
         super(context);
@@ -385,9 +425,99 @@ public class Square extends View {
      * Set the correct answer for this square
      * @param newAnswer
      */
-    public void setAnswer(int newAnswer) {
+    public void setAnswer(Integer newAnswer) {
         answer = newAnswer;
         invalidateTextPaintAndMeasurements();
+    }
+
+    /**
+     * Get the value of the correct answer
+     * @return an Integer or null
+     */
+    public Integer getAnswer(){
+        if(answer != null){
+            return Integer.valueOf(answer);
+        }else {
+            return null;
+        }
+    }
+
+    /**
+     * Set the row, col and box for the square and add the square to the row, col and box
+     * @param row
+     * @param col
+     * @param box
+     */
+    public void setCollections(Row row, Col col, Box box, int squareIndex, Box[] boxes, Row[] rows, Col[] cols){
+        this.squareIndex = squareIndex;
+        this.row = row;
+        this.col = col;
+        this.box = box;
+        //This square not added to collections yet, so collection size should equal the square's index
+        //colIndex matches the number of squares in the row
+        this.colIndex = new Integer(row.getNumberSquares());
+        //rowIndex matches the number of squares in the col
+        this.rowIndex = new Integer(col.getNumberSquares());
+        //boxIndex is the index of the square within it's box.
+        this.boxIndex = new Integer(box.getNumberSquares());
+        //Add square to the row, col and box
+        row.addSquare(this);
+        col.addSquare(this);
+        box.addSquare(this);
+        this.boxes = boxes;
+        this.rows = rows;
+        this.cols = cols;
+    }
+
+    /**
+     * Returns true if the given answer is possible for this square
+     * @param answer
+     * @return
+     */
+    public boolean isPossibleAnswer(int answer){
+        if(row.answerInCollection(answer)||col.answerInCollection(answer)||box.answerInCollection(answer)){
+            return false;
+        }
+        return true;
+    }
+
+    public int getRowIndex() {
+        return rowIndex;
+    }
+
+    public int getColIndex() {
+        return colIndex;
+    }
+
+    public int getBoxIndex() {
+        return boxIndex;
+    }
+
+    public int getSquareIndex() {
+        return squareIndex;
+    }
+
+    public Box getBox() {
+        return box;
+    }
+
+    public Row getRow() {
+        return row;
+    }
+
+    public Col getCol() {
+        return col;
+    }
+
+    public void showAnswer(){
+        if(answer != null){
+            this.setMainNumber(answer);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "SQUARE " + squareIndex + "\nROW " + row.getRowNumber() + " COL " + col.getColNumber() + " BOX " + box.getBoxNumber();
     }
 
     public void setEditNumber(int editNumber) {
@@ -413,5 +543,21 @@ public class Square extends View {
                 return;
             case 9: show9 = !show9;
         }
+    }
+
+    public HashSet<Integer> possibleAnswers() {
+        //Create the set
+        HashSet<Integer> possibleAnswers = new HashSet();
+        possibleAnswers.addAll(Arrays.asList(1,2,3,4,5,6,7,8,9));
+        //Remove the ones already in the row, col or box
+        row.removeDuplicates(possibleAnswers);
+        col.removeDuplicates(possibleAnswers);
+        box.removeDuplicates(possibleAnswers);
+        return possibleAnswers;
+    }
+
+    @Override
+    public int compareTo(Square square) {
+        return squareIndex-square.getSquareIndex();
     }
 }
