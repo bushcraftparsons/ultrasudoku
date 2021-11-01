@@ -1,35 +1,23 @@
-package com.example.views;
+package com.game.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.example.killersudoku.Box;
-import com.example.killersudoku.Col;
+import com.game.killersudoku.Box;
+import com.game.killersudoku.Col;
 import com.example.killersudoku.R;
-import com.example.killersudoku.Row;
-import com.example.killersudoku.Utils;
+import com.game.killersudoku.Row;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * TODO: document your custom view class.
@@ -212,6 +200,7 @@ public class Square extends View implements Comparable<Square> {
         Rect bounds2 = new Rect();
         mTextPaint.getTextBounds(getMainNumberText(), 0, getMainNumberText().length(), bounds2);
         mainNumberTextHeight = bounds2.height();
+        invalidate ();
     }
 
     @Override
@@ -340,15 +329,6 @@ public class Square extends View implements Comparable<Square> {
     }
 
     /**
-     * Gets the main number attribute value.
-     *
-     * @return The main number attribute value. Could be null
-     */
-    public Integer getMainNumber() {
-        return mainNumber;
-    }
-
-    /**
      * Sets the sudoku square main number
      *
      * @param newMainNumber The main number attribute value to use.
@@ -360,7 +340,6 @@ public class Square extends View implements Comparable<Square> {
             mainNumber = newMainNumber;
         }
         invalidateTextPaintAndMeasurements();
-        invalidate ();
     }
 
     public void toggleSelected(){
@@ -370,55 +349,14 @@ public class Square extends View implements Comparable<Square> {
             selected = true;
         }
         invalidateTextPaintAndMeasurements();
-        invalidate();
     }
 
     public void unselect(){
         if(selected){
             selected = false;
             invalidateTextPaintAndMeasurements();
-            invalidate();
         }
 
-    }
-
-    /**
-     * Gets the main number color attribute value.
-     *
-     * @return The main number color attribute value.
-     */
-    public int getMainNumberColor() {
-        return mainNumberColor;
-    }
-
-    /**
-     * Sets the view"s main number color attribute value. This is the colour of the main number
-     *
-     * @param numberColor The main number color attribute value to use.
-     */
-    public void setMainNumberColor(int numberColor) {
-        mainNumberColor = numberColor;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the main text dimension attribute value.
-     *
-     * @return The main text dimension attribute value.
-     */
-    public float getMainTextDimension() {
-        return mainTextDimension;
-    }
-
-    /**
-     * Sets the view"s main text dimension attribute value. This dimension
-     * is the main number font size.
-     *
-     * @param mainDimension The example dimension attribute value to use.
-     */
-    public void setMainTextDimension(float mainDimension) {
-        mainTextDimension = mainDimension;
-        invalidateTextPaintAndMeasurements();
     }
 
     /**
@@ -469,30 +407,6 @@ public class Square extends View implements Comparable<Square> {
         this.cols = cols;
     }
 
-    /**
-     * Returns true if the given answer is possible for this square
-     * @param answer
-     * @return
-     */
-    public boolean isPossibleAnswer(int answer){
-        if(row.answerInCollection(answer)||col.answerInCollection(answer)||box.answerInCollection(answer)){
-            return false;
-        }
-        return true;
-    }
-
-    public int getRowIndex() {
-        return rowIndex;
-    }
-
-    public int getColIndex() {
-        return colIndex;
-    }
-
-    public int getBoxIndex() {
-        return boxIndex;
-    }
-
     public int getSquareIndex() {
         return squareIndex;
     }
@@ -518,6 +432,20 @@ public class Square extends View implements Comparable<Square> {
     @Override
     public String toString() {
         return "SQUARE " + squareIndex + "\nROW " + row.getRowNumber() + " COL " + col.getColNumber() + " BOX " + box.getBoxNumber();
+    }
+
+    public void erase() {
+        mainNumber=null;
+        show1 = false;
+        show2 = false;
+        show3 = false;
+        show4 = false;
+        show5 = false;
+        show6 = false;
+        show7 = false;
+        show8 = false;
+        show9 = false;
+        invalidateTextPaintAndMeasurements();
     }
 
     public void setEditNumber(int editNumber) {

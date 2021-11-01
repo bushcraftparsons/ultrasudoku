@@ -3,12 +3,33 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../layout/custom_preview.xml" value="0.67" />
+        <entry key="../../../../layout/custom_preview.xml" value="0.33" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.371875" />
         <entry key="app/src/main/res/drawable/circle.xml" value="0.2140625" />
+        <entry key="app/src/main/res/drawable/dim_light_button.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/dustbin.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/edit.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/flash_dark_button.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/hint.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/radial_gradient.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/radial_gradient_dark.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/radial_gradient_dark_flash.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/radial_gradient_light.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/radial_gradient_light_dim.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/undo.xml" value="0.371875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/sample_icon_button.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/layout/board_layout.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/button_layout.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/button_view.xml" value="0.20052083333333334" />
+        <entry key="app/src/main/res/layout/icon_button_layout.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/icon_button_view.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/number_button_layout.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/number_button_view.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/round_button_view.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/row_layout.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/sample_icon_button.xml" value="0.33" />
         <entry key="app/src/main/res/layout/sample_my_view.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/sample_round_button_view.xml" value="0.2" />
         <entry key="app/src/main/res/layout/sample_title_bar.xml" value="0.19791666666666666" />

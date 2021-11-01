@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.KillerSudoku">
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton1"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton2"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton1" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton3"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton2" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton4"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton3" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton5"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton4" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton6"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton5" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton7"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="7"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton6" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton8"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/NumberButton9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton7" />
+
+    <com.game.views.NumberButton
+        android:id="@+id/NumberButton9"
+        style="@style/Widget.Theme.KillerSudoku.NumberButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconButtonText="9"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/NumberButton8" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

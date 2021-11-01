@@ -6,8 +6,9 @@
         <item name="mainNumberColor">?colorPrimary</item>
         <item name="mainNumberErrorColor">?colorError</item>
         <item name="editNumberColor">?colorOnBackground</item>
-        <item name="squareBorderColor">?colorSecondaryVariant</item>
+        <item name="squareBorderColor">?colorPrimary</item>
         <item name="selectedSquareBorderColor">?colorSecondary</item>
+        <item name="borderWidth">3dp</item>
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:clickable">true</item>
@@ -15,24 +16,28 @@
         <item name="android:paddingBottom">20dp</item>
     </style>
 
-    <style name="Widget.Theme.KillerSudoku.IconButtonView" parent="">
-        <item name="android:background">@color/gray_600</item>
-    </style>
-
-    <style name="Widget.Theme.KillerSudoku.RoundButtonView" parent="">
-        <item name="android:background">?background</item>
-        <item name="android:layout_width">60dp</item>
+    <style name="Widget.Theme.KillerSudoku.NumberButton" parent="">
+        <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:clickable">true</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="buttonColor">?colorPrimary</item>
-        <item name="buttonText">""</item>
-        <item name="buttonRadius">30dp</item>
-        <item name="textColor">?colorOnPrimary</item>
+        <item name="iconButtonText">"5"</item>
+        <item name="iconButtonTextColor">?colorOnPrimary</item>
+        <item name="gradientRing">@drawable/dim_light_button</item>
     </style>
 
-    <style name="Widget.Theme.KillerSudoku.MyView" parent="">
-        <item name="android:background">@color/gray_600</item>
+    <style name="Widget.Theme.KillerSudoku.Button" parent="">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:clickable">true</item>
+        <item name="gradientRing">@drawable/flash_dark_button</item>
+    </style>
+
+    <style name="Widget.Theme.KillerSudoku.IconButton" parent="">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:clickable">true</item>
+        <item name="iconDrawable">@drawable/dustbin</item>
+        <item name="iconAction">"delete"</item>
+        <item name="gradientRing">@drawable/dim_light_button</item>
     </style>
 </resources>

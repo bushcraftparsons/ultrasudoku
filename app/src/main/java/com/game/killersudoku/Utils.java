@@ -1,4 +1,4 @@
-package com.example.killersudoku;
+package com.game.killersudoku;
 
 import java.util.HashSet;
 

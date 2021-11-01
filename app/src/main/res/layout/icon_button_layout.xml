@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.KillerSudoku">
+
+    <com.game.views.IconButton
+        android:id="@+id/IconButton1"
+        style="@style/Widget.Theme.KillerSudoku.IconButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconDrawable="@drawable/dustbin"
+        app:iconAction="@string/button_action_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/IconButton2"
+        />
+
+    <com.game.views.IconButton
+        android:id="@+id/IconButton2"
+        style="@style/Widget.Theme.KillerSudoku.IconButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconDrawable="@drawable/undo"
+        app:iconAction="@string/button_action_undo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/IconButton1"
+        app:layout_constraintEnd_toStartOf="@+id/IconButton3"
+        />
+
+    <com.game.views.IconButton
+        android:id="@+id/IconButton3"
+        style="@style/Widget.Theme.KillerSudoku.IconButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconDrawable="@drawable/edit"
+        app:iconAction="@string/button_action_edit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/IconButton2"
+        app:layout_constraintEnd_toStartOf="@+id/IconButton4"
+        />
+
+    <com.game.views.IconButton
+        android:id="@+id/IconButton4"
+        style="@style/Widget.Theme.KillerSudoku.IconButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconDrawable="@drawable/hint"
+        app:iconAction="@string/button_action_hint"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/IconButton3"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

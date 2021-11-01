@@ -8,8 +8,8 @@
         <item name="colorPrimaryVariant">@color/dark_blue_darker</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/dark_green</item>
-        <item name="colorSecondaryVariant">@color/dark_green_darker</item>
+        <item name="colorSecondary">@color/burnt_orange</item>
+        <item name="colorSecondaryVariant">@color/dark_burnt_orange_darker</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorError">@color/dark_red</item>
         <item name="background">@color/off_white</item>

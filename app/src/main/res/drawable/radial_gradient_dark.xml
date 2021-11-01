@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:aapt="http://schemas.android.com/aapt"
+android:height="24dp"
+android:width="24dp"
+android:viewportWidth="25.0"
+android:viewportHeight="25.0">
+<group>
+    <path
+        android:name="gradient"
+        android:strokeColor="@color/teal_700"
+        android:strokeWidth="1"
+        android:fillColor="@color/dark_green"
+        android:pathData="M16.5,12.5m-12,0a8,12 0,1 1,16 0a8,12 0,1 1,-16 0">
+    </path>
+</group>
+</vector>

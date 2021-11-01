@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="NumberButton">
+        <attr name="iconButtonText" format="string"/>
+        <attr name="iconButtonTextColor" format="color"/>
+    </declare-styleable>
+</resources>

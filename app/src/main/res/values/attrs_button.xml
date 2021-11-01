@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="Button">
+        <attr name="gradientRing" format="reference"/>
+    </declare-styleable>
+</resources>

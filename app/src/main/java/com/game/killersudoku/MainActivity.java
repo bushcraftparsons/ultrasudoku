@@ -1,23 +1,26 @@
-package com.example.killersudoku;
+package com.game.killersudoku;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Resources;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.views.RoundButtonView;
-import com.example.views.Square;
+import com.example.killersudoku.R;
+import com.game.views.Button;
+import com.game.views.IconButton;
+import com.game.views.NumberButton;
+import com.game.views.Square;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
-//TODO java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Integer com.example.views.Square.getAnswer()' on a null object reference
+//TODO java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Integer Square.getAnswer()' on a null object reference
 //https://developer.android.com/reference/androidx/appcompat/app/AppCompatDelegate#setDefaultNightMode(int)
 public class MainActivity extends AppCompatActivity {
 
@@ -27,14 +30,15 @@ public class MainActivity extends AppCompatActivity {
     private Col[] cols = new Col[9];
     private Box[] boxes = new Box[9];
 
-    private RoundButtonView[] numberButtons = new RoundButtonView[9];
+    private NumberButton[] numberButtons = new NumberButton[9];
+    private IconButton[] iconButtons = new IconButton[4];
 
     private View.OnClickListener squareOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(v instanceof Square){
                 for(Square sq: squares){
-                    if(sq.getId()==v.getId()){
+                    if(sq.getSquareIndex()==((Square)v).getSquareIndex()){
                         sq.toggleSelected();
                         selectedSquare = sq;
                     }else{
@@ -48,9 +52,26 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener numberButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v instanceof RoundButtonView){
-                RoundButtonView button = (RoundButtonView) v;
-                selectedSquare.setMainNumber(button.getButtonNumber());
+            if(v instanceof NumberButton){
+                if(selectedSquare!=null){
+                    selectedSquare.setMainNumber(((NumberButton)v).getButtonNumber());
+                }
+            }
+        }
+    };
+
+    private View.OnClickListener iconButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v instanceof IconButton){
+                //TODO code what happens in button methods
+                String action = ((IconButton)v).getAction();
+                Resources res = getResources();
+                if(action.equals(res.getString(R.string.button_action_delete))){
+                    if(selectedSquare!=null){
+                        selectedSquare.erase();
+                    }
+                }
             }
         }
     };
@@ -63,22 +84,37 @@ public class MainActivity extends AppCompatActivity {
 
         Resources res = getResources();
         //Populate number buttons array
-        for(int buttonIndex = 0; buttonIndex<9; buttonIndex++){
-            String buttonName = "roundButtonView" + (buttonIndex + 2);
+        int buttonPanelId = res.getIdentifier("buttonPanel","id",getApplicationContext().getPackageName());//buttonPanel
+        for(int buttonIndex = 1; buttonIndex<10; buttonIndex++){
+            String buttonName = "NumberButton" + (buttonIndex);
             int buttonId = res.getIdentifier(buttonName,"id",getApplicationContext().getPackageName());
-            RoundButtonView foundButton = (RoundButtonView)findViewById(buttonId);
+            NumberButton foundButton = (NumberButton)findViewById(buttonPanelId).findViewById(buttonId);
             //Set click listener
             foundButton.setOnClickListener(numberButtonOnClickListener);
-            numberButtons[buttonIndex] = (RoundButtonView)findViewById(buttonId);
+            numberButtons[buttonIndex-1] = foundButton;
+        }
+        //Populate icon buttons array
+        for(int buttonIndex = 1; buttonIndex<5; buttonIndex++){
+            String buttonName = "IconButton" + (buttonIndex);
+            int buttonId = res.getIdentifier(buttonName,"id",getApplicationContext().getPackageName());
+            IconButton foundButton = (IconButton)findViewById(buttonPanelId).findViewById(buttonId);
+            //Set click listener
+            foundButton.setOnClickListener(iconButtonOnClickListener);
+            iconButtons[buttonIndex-1] = foundButton;
         }
         //Populate squares array
-        for(int index=0; index<81; index++){
-            String squareName = "square" + (index + 11);
-            int squareId = res.getIdentifier(squareName,"id",getApplicationContext().getPackageName());
-            Square foundSquare = (Square)findViewById(squareId);
-            //Set click listener
-            foundSquare.setOnClickListener(squareOnClickListener);
-            squares[index] = (Square)findViewById(squareId);
+        int countSquares = 0;
+        int boardId = res.getIdentifier("board","id",getApplicationContext().getPackageName());
+        for(int rowIndex=1; rowIndex<10; rowIndex++){
+            int rowId = res.getIdentifier("Row" +  rowIndex,"id",getApplicationContext().getPackageName());
+            for(int squareIndex=1; squareIndex<10; squareIndex++){
+                int squareId = res.getIdentifier("square" +  squareIndex,"id",getApplicationContext().getPackageName());
+                Square foundSquare = (Square)findViewById(boardId).findViewById(rowId).findViewById(squareId);
+                //Set click listener
+                foundSquare.setOnClickListener(squareOnClickListener);
+                squares[countSquares] = foundSquare;
+                countSquares++;
+            }
         }
 
         //Create Rows, Cols and Boxes
@@ -158,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
             while(!processSquare(sq)){//If successful, then carrying on
                 //There was no value for this square, need to backtrack
                 sq.setAnswer(null);
-                System.out.println("No values left for square, backtracking " + countBacktracks);
                 backtrack(sq, countBacktracks);
                 countBacktracks++;
             }
@@ -169,13 +204,11 @@ public class MainActivity extends AppCompatActivity {
         //Iterate the squares one row at a time.
         HashSet<Integer> possibles = sq.possibleAnswers();
         Integer possibleAnswer = Utils.getRandomItemFromSet(possibles);
-        System.out.println(sq.toString() + " trying answer " + possibleAnswer);
         while(possibleAnswer != null && !tryAnswer(sq, possibleAnswer, possibles)){
             //Answer was no good
             //Remove it from possibles
             possibles.remove(possibleAnswer);
             possibleAnswer = Utils.getRandomItemFromSet(possibles);
-            System.out.println(sq.toString() + " trying answer " + possibleAnswer);
         }
         if(possibleAnswer==null){
             return false;
@@ -209,7 +242,6 @@ public class MainActivity extends AppCompatActivity {
                 if(passColCheck(square)) {
                     if(passRowCheck(square)) {
                         if(passPossibleValuesCheck(square)) {
-                            System.out.println("ANSWER " + possibleAnswer);
                             //Answer is fine, continue
                             return true;
                         }
@@ -231,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
         for(int index = square.getSquareIndex() + 1; index<squares.length; index++){
             Square sq = squares[index];
             if(sq.possibleAnswers().size()==0){
-                System.out.println("Using this answer would leave no possible answers for square " + sq.toString());
                 return false;
             }
         }
@@ -252,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         while(boxNumber<=endBox){
             int numberPossibleAnswersForRow = boxes[boxNumber].getPossibleAnswersForRow(rowNumber).size();
             if(numberPossibleAnswersForRow<boxes[boxNumber].getSquaresInRowWithNoAnswer(rowNumber).size()){
-                System.out.println("Not enough answers left for box " + boxNumber + " row " + rowNumber);
                 return false;
             }
             boxNumber++;
@@ -276,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
                         return true;//At least one answer not already contained in row
                     }
                 }
-                System.out.println("The same row can't contain all the answers required in column " + colIndex);
                 return false;
             }
         }
@@ -291,9 +320,6 @@ public class MainActivity extends AppCompatActivity {
             possibles.addAll(square.possibleAnswers());
         }
         boolean pass = squaresWithOneAnswer.size() == possibles.size();
-        if(!pass){
-            System.out.println("There are two squares in the row with only one matching possible answer");
-        }
         return pass;
     }
 
@@ -303,9 +329,6 @@ public class MainActivity extends AppCompatActivity {
         allValues.addAll(sq.getRow().getPossibleAnswers());
         allValues.addAll(sq.getRow().getValues());
         boolean pass = allValues.size()==9;
-        if(!pass){
-            System.out.println("There are not enough values left for the row. values " + Utils.printHashSet(allValues));
-        }
         return pass;
     }
 

@@ -1,6 +1,6 @@
-package com.example.killersudoku;
+package com.game.killersudoku;
 
-import com.example.views.Square;
+import com.game.views.Square;
 
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -54,7 +54,6 @@ public class Box extends SquareCollection{
                 result.addAll(sq.possibleAnswers());
             }
         }
-        System.out.println("Box possible answers " + Utils.printHashSet(result));
         return result;
     }
 }

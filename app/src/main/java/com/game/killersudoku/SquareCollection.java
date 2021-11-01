@@ -1,6 +1,6 @@
-package com.example.killersudoku;
+package com.game.killersudoku;
 
-import com.example.views.Square;
+import com.game.views.Square;
 
 import java.util.HashSet;
 import java.util.SortedSet;

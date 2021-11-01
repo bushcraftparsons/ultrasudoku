@@ -1,8 +1,4 @@
-package com.example.killersudoku;
-
-import com.example.views.Square;
-
-import java.util.HashSet;
+package com.game.killersudoku;
 
 public class Col extends SquareCollection{
     int colNumber;

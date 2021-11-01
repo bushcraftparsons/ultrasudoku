@@ -1,11 +1,6 @@
-package com.example.killersudoku;
+package com.game.killersudoku;
 
-import com.example.views.Square;
-
-import java.util.HashSet;
-import java.util.TreeSet;
-
-public class Row extends SquareCollection{
+public class Row extends SquareCollection {
     int rowNumber;
     Row (int rowNumber){
         super();

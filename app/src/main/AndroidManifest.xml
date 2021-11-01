@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KillerSudoku">
         <activity
-            android:name=".MainActivity"
+            android:name="com.game.killersudoku.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

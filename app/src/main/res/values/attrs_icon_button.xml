@@ -1,4 +1,6 @@
 <resources>
-    <declare-styleable name="iconButton">
+    <declare-styleable name="IconButton">
+        <attr name="iconDrawable" format="reference" />
+        <attr name="iconAction" format="string" />
     </declare-styleable>
 </resources>

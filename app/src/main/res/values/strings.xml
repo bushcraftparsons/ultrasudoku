@@ -1,4 +1,8 @@
 <resources>
     <string name="page_title">Ultra Sudoku</string>
     <string name="app_name">Ultra Sudoku</string>
+    <string name="button_action_delete">delete</string>
+    <string name="button_action_undo">undo</string>
+    <string name="button_action_edit">edit</string>
+    <string name="button_action_hint">hint</string>
 </resources>
