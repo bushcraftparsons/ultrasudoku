@@ -7,4 +7,11 @@
     <string name="button_action_hint">hint</string>
     <string name="button_action_new">new</string>
     <string name="game_state_file">gameState.json</string>
+    <string name="refresh_game">Refresh</string>
+    <string name="easy_level">Easy</string>
+    <string name="medium_level">Medium</string>
+    <string name="hard_level">Hard</string>
+    <string name="expert_level">Expert</string>
+    <string name="extreme_level">Extreme</string>
+    <string name="choose_level_label">New game options:</string>
 </resources>

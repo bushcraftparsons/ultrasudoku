@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="New game options:"
+        android:text="@string/choose_level_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="New game options:" />
@@ -24,7 +24,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="selectLevel"
-        android:text="Refresh"
+        android:text="@string/refresh_game"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -35,7 +35,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="selectLevel"
-        android:text="Easy"
+        android:text="@string/easy_level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
@@ -46,7 +46,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="selectLevel"
-        android:text="Medium"
+        android:text="@string/medium_level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button1" />
 
@@ -57,7 +57,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="selectLevel"
-        android:text="Hard"
+        android:text="@string/hard_level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
@@ -68,7 +68,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="selectLevel"
-        android:text="Expert"
+        android:text="@string/expert_level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
@@ -79,7 +79,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="selectLevel"
-        android:text="Extreme"
+        android:text="@string/extreme_level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button4" />
 </androidx.constraintlayout.widget.ConstraintLayout>
