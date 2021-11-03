@@ -19,7 +19,7 @@
     <include
         android:id="@+id/iconButtonLayout"
         layout="@layout/icon_button_layout"
-        android:layout_width="280dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/numberButtonLayout"

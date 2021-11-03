@@ -5,4 +5,6 @@
     <string name="button_action_undo">undo</string>
     <string name="button_action_edit">edit</string>
     <string name="button_action_hint">hint</string>
+    <string name="button_action_new">new</string>
+    <string name="game_state_file">gameState.json</string>
 </resources>

@@ -3,14 +3,14 @@ package com.game.killersudoku;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.killersudoku.R;
-import com.game.views.Button;
 import com.game.views.IconButton;
 import com.game.views.NumberButton;
 import com.game.views.Square;
@@ -31,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private Box[] boxes = new Box[9];
 
     private NumberButton[] numberButtons = new NumberButton[9];
-    private IconButton[] iconButtons = new IconButton[4];
+    private IconButton[] iconButtons = new IconButton[5];
+    private final Context mainActivityContext = this;
+
+    private GameState gs;
 
     private View.OnClickListener squareOnClickListener = new View.OnClickListener() {
         @Override
@@ -72,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
                         selectedSquare.erase();
                     }
                 }
+                if(action.equals(res.getString(R.string.button_action_new))){
+                    //Open new page for choosing new game level
+                    Intent intent = new Intent(mainActivityContext, NewGame.class);
+                    startActivity(intent);
+                }
             }
         }
     };
@@ -82,6 +90,47 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ultra_sudoku_layout);
 
+        setUpInfrastructure();
+
+        // Get any Intent that may have started this activity and extract the string
+        Intent intent = getIntent();
+        String game_level = intent.getStringExtra(NewGame.GAME_LEVEL);
+        if(game_level != null){
+            //TODO User has just selected for a new game at certain level
+            //Currently, just reset solution
+            gs = this.createGame();
+        }else{
+            //Check if there is a solution in storage. If there is, then use it. Otherwise, create new.
+            gs = Utils.retrieveGameState(getResources(), this.getFilesDir());
+            if(gs==null){
+                gs = createGame();
+            }
+        }
+        //Put solution in squares
+        for(Square sq: squares){
+            sq.setAnswer(gs.getSolution()[sq.getSquareIndex()]);
+        }
+
+        //TODO remove after debug
+        showAnswers();
+    }
+
+    private GameState createGame(){
+        //Create new sudoku solution
+        this.createSolution();
+        //Get all the answers in an int[]
+        int[] solution = new int[81];//81 answers expected.
+        for(Square sq: squares){
+            solution[sq.getSquareIndex()] = sq.getAnswer();
+        }
+        GameState gs = new GameState();
+        gs.setSolution(solution);
+        //Save solution to persistent storage
+        Utils.persistGameState(gs, getResources(), this.getFilesDir());
+        return gs;
+    }
+
+    private void setUpInfrastructure(){
         Resources res = getResources();
         //Populate number buttons array
         int buttonPanelId = res.getIdentifier("buttonPanel","id",getApplicationContext().getPackageName());//buttonPanel
@@ -94,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             numberButtons[buttonIndex-1] = foundButton;
         }
         //Populate icon buttons array
-        for(int buttonIndex = 1; buttonIndex<5; buttonIndex++){
+        for(int buttonIndex = 1; buttonIndex<6; buttonIndex++){
             String buttonName = "IconButton" + (buttonIndex);
             int buttonId = res.getIdentifier(buttonName,"id",getApplicationContext().getPackageName());
             IconButton foundButton = (IconButton)findViewById(buttonPanelId).findViewById(buttonId);
@@ -138,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             Row row = this.rows[rowIndex];
             Col col = this.cols[colIndex];
             Box box = this.boxes[boxIndex];
-            square.setCollections(row, col, box, squareIndex, boxes, rows, cols);
+            square.setCollections(row, col, box, squareIndex);
             //Every square
             //col index increments
             colIndex++;
@@ -168,12 +217,6 @@ public class MainActivity extends AppCompatActivity {
                 boxIndex = boxStartIndex;
             }
         }
-
-        //Create new sudoku game
-        this.createSolution();
-
-        //TODO remove after debug
-        showAnswers();
     }
 
     public void showAnswers(){

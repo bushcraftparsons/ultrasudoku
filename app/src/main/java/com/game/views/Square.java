@@ -10,6 +10,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.game.killersudoku.Box;
 import com.game.killersudoku.Col;
 import com.example.killersudoku.R;
@@ -20,7 +22,8 @@ import java.util.HashSet;
 import java.util.Locale;
 
 /**
- * TODO: document your custom view class.
+ * Represents one small square of the 81 on a sudoku board.
+ * Keeps track of all square methods and styles
  */
 public class Square extends View implements Comparable<Square> {
     /**
@@ -71,15 +74,6 @@ public class Square extends View implements Comparable<Square> {
     private Col col;
     /**Index of the square**/
     private int squareIndex;
-    /**rowIndex matches the number of squares in the col, it's the index of the row (0 at the top)**/
-    private int rowIndex;
-    /**colIndex matches the number of squares in the row, it's the index of the column (0 at the left)**/
-    private int colIndex;
-    /**Index of the square within its box**/
-    private int boxIndex;
-    private Box[] boxes;
-    private Row[] rows;
-    private Col[] cols;
 
     public Square(Context context) {
         super(context);
@@ -181,7 +175,7 @@ public class Square extends View implements Comparable<Square> {
         square = new RectF(0,0,squareSize,squareSize);
 
         mTextPaint.setTextSize(mainTextDimension);
-        if(mainNumber==answer){
+        if(mainNumber != null && mainNumber.equals(answer)){
             mTextPaint.setColor(mainNumberColor);
         }else{
             mTextPaint.setColor(mainNumberErrorColor);
@@ -343,11 +337,7 @@ public class Square extends View implements Comparable<Square> {
     }
 
     public void toggleSelected(){
-        if(selected){
-            selected = false;
-        }else{
-            selected = true;
-        }
+        selected = !selected;
         invalidateTextPaintAndMeasurements();
     }
 
@@ -361,7 +351,7 @@ public class Square extends View implements Comparable<Square> {
 
     /**
      * Set the correct answer for this square
-     * @param newAnswer
+     * @param newAnswer The correct solution for this square
      */
     public void setAnswer(Integer newAnswer) {
         answer = newAnswer;
@@ -374,7 +364,7 @@ public class Square extends View implements Comparable<Square> {
      */
     public Integer getAnswer(){
         if(answer != null){
-            return Integer.valueOf(answer);
+            return answer;
         }else {
             return null;
         }
@@ -382,29 +372,21 @@ public class Square extends View implements Comparable<Square> {
 
     /**
      * Set the row, col and box for the square and add the square to the row, col and box
-     * @param row
-     * @param col
-     * @param box
+     * @param row The row containing this square
+     * @param col The column containing this square
+     * @param box The box containing this square
      */
-    public void setCollections(Row row, Col col, Box box, int squareIndex, Box[] boxes, Row[] rows, Col[] cols){
+    public void setCollections(Row row, Col col, Box box, int squareIndex){
         this.squareIndex = squareIndex;
         this.row = row;
         this.col = col;
         this.box = box;
-        //This square not added to collections yet, so collection size should equal the square's index
-        //colIndex matches the number of squares in the row
-        this.colIndex = new Integer(row.getNumberSquares());
-        //rowIndex matches the number of squares in the col
-        this.rowIndex = new Integer(col.getNumberSquares());
-        //boxIndex is the index of the square within it's box.
-        this.boxIndex = new Integer(box.getNumberSquares());
+        //This square not added to collections yet,
+        // so collection size should equal the square's index
         //Add square to the row, col and box
         row.addSquare(this);
         col.addSquare(this);
         box.addSquare(this);
-        this.boxes = boxes;
-        this.rows = rows;
-        this.cols = cols;
     }
 
     public int getSquareIndex() {
@@ -423,12 +405,16 @@ public class Square extends View implements Comparable<Square> {
         return col;
     }
 
+    /**
+     * Called when setting up the game
+     */
     public void showAnswer(){
         if(answer != null){
             this.setMainNumber(answer);
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "SQUARE " + squareIndex + "\nROW " + row.getRowNumber() + " COL " + col.getColNumber() + " BOX " + box.getBoxNumber();
@@ -475,8 +461,7 @@ public class Square extends View implements Comparable<Square> {
 
     public HashSet<Integer> possibleAnswers() {
         //Create the set
-        HashSet<Integer> possibleAnswers = new HashSet();
-        possibleAnswers.addAll(Arrays.asList(1,2,3,4,5,6,7,8,9));
+        HashSet<Integer> possibleAnswers = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
         //Remove the ones already in the row, col or box
         row.removeDuplicates(possibleAnswers);
         col.removeDuplicates(possibleAnswers);

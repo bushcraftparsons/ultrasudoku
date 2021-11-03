@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/flash_dark_button.xml" value="0.371875" />
         <entry key="app/src/main/res/drawable/hint.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.371875" />
+        <entry key="app/src/main/res/drawable/new_game.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/drawable/radial_gradient.xml" value="0.371875" />
         <entry key="app/src/main/res/drawable/radial_gradient_dark.xml" value="0.371875" />
         <entry key="app/src/main/res/drawable/radial_gradient_dark_flash.xml" value="0.371875" />
@@ -19,6 +20,7 @@
         <entry key="app/src/main/res/drawable/radial_gradient_light_dim.xml" value="0.371875" />
         <entry key="app/src/main/res/drawable/undo.xml" value="0.371875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_new_game.xml" value="0.5" />
         <entry key="app/src/main/res/layout/board_layout.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/button_layout.xml" value="0.35572916666666665" />
         <entry key="app/src/main/res/layout/button_view.xml" value="0.20052083333333334" />
