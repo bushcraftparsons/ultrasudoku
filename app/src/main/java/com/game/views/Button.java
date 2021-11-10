@@ -2,7 +2,6 @@ package com.game.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -13,7 +12,7 @@ import androidx.annotation.Nullable;
 import com.example.killersudoku.R;
 
 /**
- * A button which uses an icon or single character
+ * A button with an oval background which flash animates when clicked
  */
 public class Button extends View {
 
@@ -46,31 +45,12 @@ public class Button extends View {
         }
 
         a.recycle();
-
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements();
-    }
-
-    private void invalidateTextPaintAndMeasurements() {
-
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
     }
 
     @Override
     protected void onMeasure (int widthMeasureSpec,
                               int heightMeasureSpec){
         setMeasuredDimension(Math.max(widthMeasureSpec, 100), Math.max(widthMeasureSpec, 100));
-    }
-
-    @Override
-    protected void onSizeChanged (int w,
-                                  int h,
-                                  int oldw,
-                                  int oldh){
     }
 
     @Override
@@ -82,6 +62,7 @@ public class Button extends View {
                 buttonAnimation.stop();
                 buttonAnimation.start();
             }
+            assert mainListener != null;
             mainListener.onClick(v);
         };
         super.setOnClickListener(includeAnimation);

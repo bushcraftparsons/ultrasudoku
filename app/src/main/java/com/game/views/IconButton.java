@@ -3,48 +3,22 @@ package com.game.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.example.killersudoku.R;
 
 /**
- * TODO: document your custom view class.
+ * Represents icon buttons for game actions
  */
 public class IconButton extends Button {
-    private Paint iconPaint;
+    private TextPaint mTextPaint;
     private Drawable icon;
     private String action;
-//    private enum ACTION{
-//        ERASE("delete"),
-//        UNDO("undo"),
-//        EDIT("edit"),
-//        HINT("hint");
-//
-//        private final String text;
-//
-//        /**
-//         * @param text
-//         */
-//        ACTION(final String text) {
-//            this.text = text;
-//        }
-//
-//        /* (non-Javadoc)
-//         * @see java.lang.Enum#toString()
-//         */
-//        @Override
-//        public String toString() {
-//            return text;
-//        }
-//    }
+    private int labelColour;
 
     public IconButton(Context context) {
         super(context);
@@ -73,19 +47,30 @@ public class IconButton extends Button {
             icon.setCallback(this);
         }
 
+        labelColour = a.getColor(
+                R.styleable.IconButton_labelColour,
+                labelColour);
+
         action = a.getString(
                 R.styleable.IconButton_iconAction);
 
         a.recycle();
 
 
-        iconPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint = new TextPaint();
+        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setTextSize(30);
+        mTextPaint.setColor(labelColour);
+
+        setPadding(0,0,0,150);
 
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
     }
 
     private void invalidateTextPaintAndMeasurements() {
+
     }
 
     @Override
@@ -95,12 +80,15 @@ public class IconButton extends Button {
             // Draw the icon
             icon.draw(canvas);
         }
+        canvas.drawText(action,
+                getWidth()/2.0f,//Position of center of number, because it's centred text
+                getHeight()*23.0f/24,//Position of bottom of number
+                mTextPaint);
     }
 
     @Override
-    protected void onMeasure (int widthMeasureSpec,
-                              int heightMeasureSpec){
-        setMeasuredDimension(Math.max(widthMeasureSpec, 100), Math.max(widthMeasureSpec, 100));
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -109,7 +97,7 @@ public class IconButton extends Button {
                                   int oldw,
                                   int oldh){
         if(icon!=null){
-            icon.setBounds(new Rect(w/4,h/4,w*3/4,h*3/4));
+            icon.setBounds(new Rect(w/4,h/8,w*3/4,(h*7/12)));
         }
 
         invalidateTextPaintAndMeasurements();

@@ -36,10 +36,11 @@
 
     <style name="Widget.Theme.KillerSudoku.IconButton" parent="">
         <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_height">80dp</item>
         <item name="android:clickable">true</item>
         <item name="iconDrawable">@drawable/dustbin</item>
         <item name="iconAction">"delete"</item>
-        <item name="gradientRing">@drawable/flash_dark_button</item>
+        <item name="labelColour">?colorOnBackground</item>
+        <item name="gradientRing">@drawable/flash_dark_button_bottom_space</item>
     </style>
 </resources>

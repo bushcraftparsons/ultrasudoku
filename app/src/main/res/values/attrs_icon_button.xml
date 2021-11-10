@@ -2,5 +2,6 @@
     <declare-styleable name="IconButton">
         <attr name="iconDrawable" format="reference" />
         <attr name="iconAction" format="string" />
+        <attr name="labelColour" format="color"/>
     </declare-styleable>
 </resources>

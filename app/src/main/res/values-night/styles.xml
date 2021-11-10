@@ -40,6 +40,7 @@
         <item name="android:clickable">true</item>
         <item name="iconDrawable">@drawable/dustbin</item>
         <item name="iconAction">"delete"</item>
-        <item name="gradientRing">@drawable/dim_light_button</item>
+        <item name="labelColour">?colorOnBackground</item>
+        <item name="gradientRing">@drawable/dim_light_button_bottom_space</item>
     </style>
 </resources>

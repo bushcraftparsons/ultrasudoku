@@ -81,6 +81,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintDimensionRatio="1:1"
         app:iconDrawable="@drawable/new_game"
         app:iconAction="@string/button_action_new"
@@ -88,6 +89,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/IconButton4"
+        app:layout_constraintEnd_toStartOf="@+id/IconButton6"
+        />
+
+    <com.game.views.IconButton
+        android:id="@+id/IconButton6"
+        style="@style/Widget.Theme.KillerSudoku.IconButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:iconDrawable="@drawable/motion_pause_outline"
+        app:iconAction="@string/button_action_pause"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/IconButton5"
         app:layout_constraintEnd_toEndOf="parent"
         />
 
