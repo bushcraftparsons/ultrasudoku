@@ -19,27 +19,31 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.stream.IntStream;
 
 //TODO java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Integer Square.getAnswer()' on a null object reference
 //https://developer.android.com/reference/androidx/appcompat/app/AppCompatDelegate#setDefaultNightMode(int)
 public class MainActivity extends AppCompatActivity {
 
-    private Square[] squares = new Square[81];
+    private final Square[] squares = new Square[81];
     private Square selectedSquare;
-    private Row[] rows = new Row[9];
-    private Col[] cols = new Col[9];
-    private Box[] boxes = new Box[9];
+    private final Row[] rows = new Row[9];
+    private final Col[] cols = new Col[9];
+    private final Box[] boxes = new Box[9];
 
-    private NumberButton[] numberButtons = new NumberButton[9];
-    private IconButton[] iconButtons = new IconButton[5];
+    private final NumberButton[] numberButtons = new NumberButton[9];
+    private final IconButton[] iconButtons = new IconButton[5];
     private final Context mainActivityContext = this;
 
     private GameState gs;
 
-    private View.OnClickListener squareOnClickListener = new View.OnClickListener() {
+    private boolean noteMode = false;
+
+    private final View.OnClickListener squareOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(v instanceof Square){
+                //Select square
                 for(Square sq: squares){
                     if(sq.getSquareIndex()==((Square)v).getSquareIndex()){
                         sq.toggleSelected();
@@ -48,22 +52,34 @@ public class MainActivity extends AppCompatActivity {
                         sq.unselect();
                     }
                 }
-            }
-        }
-    };
-
-    private View.OnClickListener numberButtonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if(v instanceof NumberButton){
-                if(selectedSquare!=null){
-                    selectedSquare.setMainNumber(((NumberButton)v).getButtonNumber());
+                //Show selection background on row, col and box
+                for(Square sq: squares){
+                    if(sq.relatedTo(selectedSquare)){
+                        sq.showSelectionBackground();
+                    }else{
+                        sq.hideSelectionBackground();
+                    }
                 }
             }
         }
     };
 
-    private View.OnClickListener iconButtonOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener numberButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v instanceof NumberButton){
+                if(selectedSquare!=null){
+                    if(noteMode){
+                        selectedSquare.setEditNumber(((NumberButton)v).getButtonNumber());
+                    }else{
+                        selectedSquare.setMainNumber(((NumberButton)v).getButtonNumber());
+                    }
+                }
+            }
+        }
+    };
+
+    private final View.OnClickListener iconButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(v instanceof IconButton){
@@ -76,13 +92,21 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(action.equals(res.getString(R.string.button_action_new))){
-                    //Open new page for choosing new game level
-                    Intent intent = new Intent(mainActivityContext, NewGame.class);
-                    startActivity(intent);
+                    openLevelChooser();
+                }
+                if(action.equals(res.getString(R.string.button_action_edit))){
+                    //Toggle note mode
+                    noteMode=!noteMode;
                 }
             }
         }
     };
+
+    private final void openLevelChooser(){
+        //Open new page for choosing new game level
+        Intent intent = new Intent(mainActivityContext, NewGame.class);
+        startActivity(intent);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -96,38 +120,53 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String game_level = intent.getStringExtra(NewGame.GAME_LEVEL);
         if(game_level != null){
-            //TODO User has just selected for a new game at certain level
-            //Currently, just reset solution
-            gs = this.createGame();
+            gs = new GameState();
+            gs.setLevel(game_level);
+            this.createGame();
+            populateGameState();
         }else{
-            //Check if there is a solution in storage. If there is, then use it. Otherwise, create new.
+            //Check if there is a solution in storage. If there is, then use it. Otherwise, open choose level page.
             gs = Utils.retrieveGameState(getResources(), this.getFilesDir());
-            if(gs==null){
-                gs = createGame();
+            if(gs!=null){
+                populateGameState();
+            }else{
+                openLevelChooser();
             }
         }
-        //Put solution in squares
-        for(Square sq: squares){
-            sq.setAnswer(gs.getSolution()[sq.getSquareIndex()]);
-        }
-
-        //TODO remove after debug
-        showAnswers();
     }
 
-    private GameState createGame(){
+    private void populateGameState(){
+        //Put solution and reveal shown values in squares
+        for(Square sq: squares){
+            sq.setAnswer(gs.getSolution()[sq.getSquareIndex()]);
+            if(IntStream.of(gs.getShownSquares()).anyMatch(x -> x == sq.getSquareIndex())){
+                sq.showAnswer();
+            }
+        }
+    }
+
+    private void createGame(){
+        for(Square sq: squares){
+            sq.reset();
+        }
         //Create new sudoku solution
         this.createSolution();
-        //Get all the answers in an int[]
+        GameMaker gm = new GameMaker(squares, rows, cols, boxes);
+        gm.makeEasy();
+
+        //Get all the answers and shown values in an int[]
         int[] solution = new int[81];//81 answers expected.
+        HashSet<Integer> shown = new HashSet<>();
         for(Square sq: squares){
             solution[sq.getSquareIndex()] = sq.getAnswer();
+            if(sq.shown()){
+                shown.add(sq.getSquareIndex());
+            }
         }
-        GameState gs = new GameState();
         gs.setSolution(solution);
+        gs.setShownSquares(shown.stream().mapToInt(Number::intValue).toArray());
         //Save solution to persistent storage
         Utils.persistGameState(gs, getResources(), this.getFilesDir());
-        return gs;
     }
 
     private void setUpInfrastructure(){
@@ -247,16 +286,13 @@ public class MainActivity extends AppCompatActivity {
         //Iterate the squares one row at a time.
         HashSet<Integer> possibles = sq.possibleAnswers();
         Integer possibleAnswer = Utils.getRandomItemFromSet(possibles);
-        while(possibleAnswer != null && !tryAnswer(sq, possibleAnswer, possibles)){
+        while(possibleAnswer != null && !tryAnswer(sq, possibleAnswer)){
             //Answer was no good
             //Remove it from possibles
             possibles.remove(possibleAnswer);
             possibleAnswer = Utils.getRandomItemFromSet(possibles);
         }
-        if(possibleAnswer==null){
-            return false;
-        }
-        return true;
+        return possibleAnswer != null;
     }
 
     public void backtrack(Square sq, int numberBackTracks){
@@ -265,10 +301,8 @@ public class MainActivity extends AppCompatActivity {
         List<Square> backTrackSquares = Arrays.asList(squares).subList(startIndex, sq.getSquareIndex());
         //Set possible answers to null except for the first square
         //Set all backtrack square to null answers
-        int count = 0;
         for(Square square: backTrackSquares){
             square.setAnswer(null);
-            count++;
         }
         //Now process them again
         for(Square square: backTrackSquares){
@@ -276,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean tryAnswer(Square square, Integer possibleAnswer, HashSet<Integer> possibles){
+    public boolean tryAnswer(Square square, Integer possibleAnswer){
         //Try an answer
         square.setAnswer(possibleAnswer);
         //For rest of squares, make sure all still have a possible answer
@@ -298,9 +332,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Helper method for creating a sudoku solution
      * For rest of squares, make sure all still have a possible answer
-     * @param square
-     * @return
+     * @param square The square to be checked
+     * @return Returns true if there is still a possible answer for this square, false if not
      */
     public boolean passRestOfSquareCheck (Square square){
         for(int index = square.getSquareIndex() + 1; index<squares.length; index++){
@@ -362,17 +397,15 @@ public class MainActivity extends AppCompatActivity {
         for(Square square: squaresWithOneAnswer){
             possibles.addAll(square.possibleAnswers());
         }
-        boolean pass = squaresWithOneAnswer.size() == possibles.size();
-        return pass;
+        return squaresWithOneAnswer.size() == possibles.size();
     }
 
     public boolean passPossibleValuesCheck(Square sq){
         //If, looking at answer values and possible value, there are 9 values, then pass
-        HashSet<Integer> allValues = new HashSet();
+        HashSet<Integer> allValues = new HashSet<>();
         allValues.addAll(sq.getRow().getPossibleAnswers());
         allValues.addAll(sq.getRow().getValues());
-        boolean pass = allValues.size()==9;
-        return pass;
+        return allValues.size()==9;
     }
 
 }

@@ -2,10 +2,12 @@
     <declare-styleable name="Square">
         <attr name="mainNumberColor" format="color" />
         <attr name="mainNumberErrorColor" format="color" />
+        <attr name="mainNumberShownColor" format="color" />
         <attr name="editNumberColor" format="color" />
         <attr name="squareBackgroundColor" format="color" />
         <attr name="squareBorderColor" format="color" />
         <attr name="selectedSquareBorderColor" format="color" />
+        <attr name="showSelectionBackgroundColor" format="color"/>
         <attr name="mainTextDimension" format="dimension" />
         <attr name="editTextDimension" format="dimension" />
         <attr name="borderWidth" format="dimension" />

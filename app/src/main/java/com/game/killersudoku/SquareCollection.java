@@ -9,7 +9,7 @@ import java.util.TreeSet;
 public class SquareCollection {
     TreeSet<Square> squares;
 
-    public SquareCollection() { this.squares = new TreeSet<Square>(); }
+    public SquareCollection() { this.squares = new TreeSet<>(); }
 
     public void addSquare(Square square){
         this.squares.add(square);
@@ -19,10 +19,10 @@ public class SquareCollection {
 
     /**
      * Get the answer values from the squares
-     * @return
+     * @return Returns all the values which could be used in the solution for this collection of squares
      */
     public HashSet<Integer> getValues(){
-        HashSet<Integer> values = new HashSet<Integer>();
+        HashSet<Integer> values = new HashSet<>();
         for(Square sq: squares){
             Integer sqAnswer = sq.getAnswer();
             if(sqAnswer!= null){
@@ -30,6 +30,20 @@ public class SquareCollection {
             }
         }
         return values;
+    }
+
+    public HashSet<Integer> getCalculableAnswers(Square notThisSquare){
+        HashSet<Integer> calculableAnswers = new HashSet<>();
+        for(Square sq: squares){
+            if(sq.getSquareIndex()==notThisSquare.getSquareIndex()){
+                continue;//Don't do this square
+            }
+            Integer calculableAnswer = sq.getCalculableAnswer();
+            if(calculableAnswer!= null){
+                calculableAnswers.add(calculableAnswer);
+            }
+        }
+        return calculableAnswers;
     }
 
     public HashSet<Integer> getPossibleAnswers(){
@@ -44,10 +58,31 @@ public class SquareCollection {
 
     /**
      * Checks values and removes values already contained from the set
-     * @param possibles
+     * @param possibles the possible values for an answer from which duplicates are to be removed
      */
     public void removeDuplicates(HashSet<Integer> possibles){
         possibles.removeAll(this.getValues());
+    }
+
+    /**
+     *
+     * @param possibles The possible values for the solution
+     */
+    public void removeCalculableAnswers(HashSet<Integer> possibles, Square sq){
+        possibles.removeAll(this.getCalculableAnswers(sq));
+    }
+
+    public boolean isLastSolution(Integer solution){
+        int solutionCount = 0;
+        for(Square sq: squares){
+            if(sq.possibleSolutions().contains(solution)){
+                solutionCount++;
+                if(solutionCount>1){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public int getNumberSquares(){
@@ -60,8 +95,8 @@ public class SquareCollection {
 
     /**
      * Returns true if the answer is already in the squares in this collection
-     * @param answer
-     * @return
+     * @param answer a value for the answer we are checking for
+     * @return Returns true if the answer is already in the squares in this collection
      */
     public boolean answerInCollection(int answer){
         for(Square sq: this.squares){
@@ -118,11 +153,48 @@ public class SquareCollection {
 
     public boolean containsAnswer(Integer answer){
         for(Square sq: squares){
-            if(sq.getAnswer() != null && sq.getAnswer()==answer){
+            if(sq.getAnswer() != null && sq.getAnswer().equals(answer)){
                 return true;
             }
         }
         return false;
+    }
+
+    public HashSet<Box> getBoxes(){
+        HashSet<Box> boxes = new HashSet<>();
+        for(Square sq: squares){
+            boxes.add(sq.getBox());
+        }
+        return boxes;
+    }
+
+    public HashSet<Row> getRows(){
+        HashSet<Row> rows = new HashSet<>();
+        for(Square sq: squares){
+            rows.add(sq.getRow());
+        }
+        return rows;
+    }
+
+    public HashSet<Col> getCols(){
+        HashSet<Col> cols = new HashSet<>();
+        for(Square sq: squares){
+            cols.add(sq.getCol());
+        }
+        return cols;
+    }
+
+    public void showSolution(Integer solution){
+        for(Square sq: squares){
+            if(sq.getAnswer().equals(solution)){
+                if(sq.isCalculable()){
+                    //No need to show answer, it is calculable
+                    return;
+                }
+                sq.showAnswer();
+                return;
+            }
+        }
     }
 
 }

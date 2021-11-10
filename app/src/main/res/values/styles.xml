@@ -4,6 +4,8 @@
         <item name="android:background">?background</item>
         <item name="mainNumberColor">?colorPrimary</item>
         <item name="mainNumberErrorColor">?colorError</item>
+        <item name="mainNumberShownColor">?colorOnBackground</item>
+        <item name="showSelectionBackgroundColor">?backgroundTint</item>
         <item name="editNumberColor">?colorOnBackground</item>
         <item name="squareBackgroundColor">@color/white</item>
         <item name="squareBorderColor">?colorPrimary</item>

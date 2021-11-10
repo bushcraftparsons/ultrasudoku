@@ -16,6 +16,7 @@ import com.game.killersudoku.Box;
 import com.game.killersudoku.Col;
 import com.example.killersudoku.R;
 import com.game.killersudoku.Row;
+import com.game.killersudoku.Utils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,6 +39,20 @@ public class Square extends View implements Comparable<Square> {
      * Square is selected
      */
     private boolean selected = false;
+    private boolean selectionBackground = false;
+    /**
+     * true if shown at the start of the game
+     */
+    private boolean shown = false;
+    /**
+     * true if square is calculable from the show solutions
+     */
+    private boolean calculable = false;
+    /**
+     * Solutions which are still possible for this square given the game board.
+     * Used when calculating which squares to show.
+     */
+    HashSet<Integer> possibleSolutions = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
 
     private boolean show1 = false;
     private boolean show2 = false;
@@ -51,8 +66,10 @@ public class Square extends View implements Comparable<Square> {
 
     private int mainNumberErrorColor;
     private int mainNumberColor;
+    private int mainNumberShownColor;
     private int editNumberColor;
     private int squareBackgroundColor;
+    private int showSelectionBackgroundColor;
     private int squareBorderColor;
     private int selectedSquareBorderColor;
 
@@ -104,6 +121,10 @@ public class Square extends View implements Comparable<Square> {
         mainNumberErrorColor = a.getColor(
                 R.styleable.Square_mainNumberErrorColor,
                 mainNumberErrorColor);
+        mainNumberShownColor = a.getColor(
+                R.styleable.Square_mainNumberShownColor,
+                mainNumberShownColor
+        );
         editNumberColor = a.getColor(
                 R.styleable.Square_editNumberColor,
                 editNumberColor);
@@ -113,6 +134,9 @@ public class Square extends View implements Comparable<Square> {
         squareBorderColor = a.getColor(
                 R.styleable.Square_squareBorderColor,
                 squareBorderColor);
+        showSelectionBackgroundColor = a.getColor(
+                R.styleable.Square_squareBorderColor,
+                showSelectionBackgroundColor);
         selectedSquareBorderColor = a.getColor(
                 R.styleable.Square_selectedSquareBorderColor,
                 selectedSquareBorderColor);
@@ -143,7 +167,6 @@ public class Square extends View implements Comparable<Square> {
         editTextPaint.setTextAlign(Paint.Align.CENTER);
 
         squarePaint = new Paint();
-        squarePaint.setColor(squareBackgroundColor);
         squarePaint.setStyle(Paint.Style.FILL);
 
         squareBorderPaint = new Paint();
@@ -171,16 +194,30 @@ public class Square extends View implements Comparable<Square> {
         }
     }
 
+    public void showSelectionBackground(){
+        selectionBackground=true;
+        invalidateTextPaintAndMeasurements();
+    }
+
+    public void hideSelectionBackground(){
+        selectionBackground = false;
+        invalidateTextPaintAndMeasurements();
+    }
+
     private void invalidateTextPaintAndMeasurements() {
         square = new RectF(0,0,squareSize,squareSize);
 
         mTextPaint.setTextSize(mainTextDimension);
-        if(mainNumber != null && mainNumber.equals(answer)){
+        if(shown){
+            mTextPaint.setColor(mainNumberShownColor);
+        }else if(mainNumber != null && mainNumber.equals(answer)){
             mTextPaint.setColor(mainNumberColor);
         }else{
             mTextPaint.setColor(mainNumberErrorColor);
         }
 
+        squarePaint.setColor(selectionBackground?showSelectionBackgroundColor:squareBackgroundColor);
+        squarePaint.setAlpha(selectionBackground?100:255);
 
         editTextPaint.setTextSize(editTextDimension);
         editTextPaint.setColor(editNumberColor);
@@ -328,6 +365,11 @@ public class Square extends View implements Comparable<Square> {
      * @param newMainNumber The main number attribute value to use.
      */
     public void setMainNumber(int newMainNumber) {
+        if(shown || mainNumber==answer){
+            //Square not editable when it is shown as a starting square, nor
+            //after the correct answer has been added
+            return;
+        }
         if(mainNumber != null && mainNumber == newMainNumber){
             mainNumber = null;
         }else{
@@ -410,7 +452,23 @@ public class Square extends View implements Comparable<Square> {
      */
     public void showAnswer(){
         if(answer != null){
+            this.possibleSolutions.clear();
+            this.possibleSolutions.add(answer);
+            //Remove the answer from possible solutions in other squares in
+            //the row, col and box
+            for(Square sq: this.getCol().getRestOfSet(this)){
+                sq.removePossibleSolution(answer);
+            }
+            for(Square sq: this.getRow().getRestOfSet(this)){
+                sq.removePossibleSolution(answer);
+            }
+            for(Square sq: this.getBox().getRestOfSet(this)){
+                sq.removePossibleSolution(answer);
+            }
             this.setMainNumber(answer);
+            this.shown = true;
+            this.calculable = true;
+            invalidateTextPaintAndMeasurements();
         }
     }
 
@@ -434,29 +492,46 @@ public class Square extends View implements Comparable<Square> {
         invalidateTextPaintAndMeasurements();
     }
 
+    /**
+     * Resets the square ready for a new game
+     */
+    public void reset() {
+        answer = null;
+        erase();
+        shown = false;
+        calculable = false;
+        possibleSolutions = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+    }
+
     public void setEditNumber(int editNumber) {
-        if(mainNumber!=null){
+        if(shown || mainNumber==answer){
+            //Square not editable when it is shown as a starting square, nor
+            //after the correct answer has been added
             return;
+        }
+        if(mainNumber!=null){
+            mainNumber=null;
         }
         switch(editNumber){
             case 1: show1 = !show1;
-                return;
+                break;
             case 2: show2 = !show2;
-                return;
+                break;
             case 3: show3 = !show3;
-                return;
+                break;
             case 4: show4 = !show4;
-                return;
+                break;
             case 5: show5 = !show5;
-                return;
+                break;
             case 6: show6 = !show6;
-                return;
+                break;
             case 7: show7 = !show7;
-                return;
+                break;
             case 8: show8 = !show8;
-                return;
+                break;
             case 9: show9 = !show9;
         }
+        invalidateTextPaintAndMeasurements();
     }
 
     public HashSet<Integer> possibleAnswers() {
@@ -469,8 +544,55 @@ public class Square extends View implements Comparable<Square> {
         return possibleAnswers;
     }
 
+    public HashSet<Integer> possibleSolutions() {
+        return possibleSolutions;
+    }
+
+    public Integer getCalculableAnswer(){
+        if(shown | isCalculable()){
+            return answer;
+        }else{
+            return null;
+        }
+    }
+    public boolean shown() {
+        return shown;
+    }
+
+    public void removePossibleSolution(Integer possibleSolution){
+        this.possibleSolutions.remove(possibleSolution);
+        if(this.possibleSolutions.size()==1){
+            calculable = true;
+        }
+    }
+
+    public boolean hasHiddenSingle(){
+        boolean hasHiddenSingle =  (row.isLastSolution(answer)||col.isLastSolution(answer)||box.isLastSolution(answer));
+        if(hasHiddenSingle){
+            calculable = true;
+        }
+        return hasHiddenSingle;
+    }
+
+    public boolean isCalculable() {
+        return calculable || hasHiddenSingle();
+    }
+
+    public void setCalculable(boolean calculable) {
+        this.calculable = calculable;
+    }
+
     @Override
     public int compareTo(Square square) {
         return squareIndex-square.getSquareIndex();
+    }
+
+    public boolean relatedTo(Square selectedSquare) {
+        if(selectedSquare!=null ){
+            return selectedSquare.row.getRowNumber()==row.getRowNumber() || selectedSquare.col.getColNumber()==col.getColNumber() || selectedSquare.box.getBoxNumber()==box.getBoxNumber();
+        }else{
+            return false;
+        }
+
     }
 }

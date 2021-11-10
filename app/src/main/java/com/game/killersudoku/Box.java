@@ -1,8 +1,11 @@
 package com.game.killersudoku;
 
+import androidx.annotation.Nullable;
+
 import com.game.views.Square;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.TreeSet;
 
 public class Box extends SquareCollection{
@@ -55,5 +58,15 @@ public class Box extends SquareCollection{
             }
         }
         return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boxNumber);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj.getClass().equals(this.getClass()) && ((Box)obj).getBoxNumber()==this.getBoxNumber());
     }
 }

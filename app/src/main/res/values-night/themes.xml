@@ -13,6 +13,7 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorError">@color/pale_red</item>
         <item name="background">@color/off_black</item>
+        <item name="backgroundTint">@color/dark_green_darker</item>
         <item name="colorOnBackground">@color/off_white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?colorPrimaryVariant</item>

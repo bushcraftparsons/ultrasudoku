@@ -6,6 +6,7 @@
     <string name="button_action_edit">edit</string>
     <string name="button_action_hint">hint</string>
     <string name="button_action_new">new</string>
+    <string name="button_action_pause">pause</string>
     <string name="game_state_file">gameState.json</string>
     <string name="refresh_game">Refresh</string>
     <string name="easy_level">Easy</string>
